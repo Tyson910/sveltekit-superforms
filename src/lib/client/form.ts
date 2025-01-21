@@ -1,7 +1,6 @@
 import { isElementInViewport, scrollToAndCenter } from './elements.js';
 import type { FormOptions } from './superForm.js';
 import { onDestroy, tick } from 'svelte';
-import type { Writable } from 'svelte/store';
 
 enum FetchStatus {
 	Idle = 0,
@@ -19,9 +18,9 @@ const activeTimers = new Set<() => void>();
 export function Form<T extends Record<string, unknown>, M>(
 	formElement: HTMLFormElement,
 	timers: {
-		submitting: Writable<boolean>;
-		delayed: Writable<boolean>;
-		timeout: Writable<boolean>;
+		submitting: boolean;
+		delayed: boolean;
+		timeout: boolean;
 	},
 	options: FormOptions<T, M>
 ) {
@@ -67,9 +66,9 @@ export function Form<T extends Record<string, unknown>, M>(
 
 	function Timers_setState(s: FetchStatus) {
 		state = s;
-		timers.submitting.set(state >= FetchStatus.Submitting);
-		timers.delayed.set(state >= FetchStatus.Delayed);
-		timers.timeout.set(state >= FetchStatus.Timeout);
+		timers.submitting = state >= FetchStatus.Submitting;
+		timers.delayed = state >= FetchStatus.Delayed;
+		timers.timeout = state >= FetchStatus.Timeout;
 	}
 
 	//#endregion
